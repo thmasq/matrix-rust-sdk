@@ -333,4 +333,16 @@ impl SasVerification {
     pub fn room_id(&self) -> Option<&RoomId> {
         self.inner.room_id()
     }
+
+    /// Cancel the verification providing a specific `CancelCode`.
+    ///
+    /// This is useful if the verification needs to be canceled automatically
+    /// due to a specific policy or condition (like a device being dehydrated or
+    /// user mismatch).
+    pub async fn cancel_with_code(&self, code: CancelCode) -> Result<()> {
+        if let Some(request) = self.inner.cancel_with_code(code) {
+            self.client.send_verification_request(request).await?;
+        }
+        Ok(())
+    }
 }
